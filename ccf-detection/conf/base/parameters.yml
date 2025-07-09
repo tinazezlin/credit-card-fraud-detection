@@ -1,0 +1,6 @@
+
+RF: "RandomForest"
+KNN: "KNN"
+SVM: "SVM"
+XGBoost: "XGBoost"
+CatBoost: "CatBoost"

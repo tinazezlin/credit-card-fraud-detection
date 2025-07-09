@@ -1,0 +1,73 @@
+raw_creditcard_data:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/creditcard.csv
+
+preprocessed_data:
+  type: pandas.CSVDataset
+  filepath: data/02_intermediate/preprocessed_creditcard.csv
+
+# ============== Feature selection =======================================
+correlation_with_target:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/feature_target_correlation.csv
+
+cleaned_features_corr:
+  type: pandas.CSVDataset
+  filepath: data/05_model_input/cleaned_no_multicollinearity.csv
+
+information_gain_scores:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/information_gain_scores.csv
+
+extra_trees_importance:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/extra_trees_importance.csv
+
+lightgbm_feature_importance:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/lightgbm_feature_importance.csv
+
+lightgbm_feature_importance_norm:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/lightgbm_feature_importance_norm.csv
+
+selected_feature_vectors:
+  type: pickle.PickleDataset
+  filepath: data/04_feature/selected_feature_vectors.pkl
+  versioned: true
+
+filtered_data:
+  type: pandas.CSVDataset
+  filepath: data/04_feature/filtered_features_data.csv
+  save_args:
+    index: False
+
+baseline_model_scores:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/baseline_model_scores.csv
+
+model_resampling_results:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/model_resampling_results.csv
+
+
+rf_resampling_results:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/results/rf_resampling_results.csv
+
+
+knn_resampling_results:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/results/knn_resampling_results.csv
+
+svm_resampling_results:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/results/svm_resampling_results.csv
+
+XGBoost_resampling_results:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/results/XGBoost_resampling_results.csv
+
+CatBoost_resampling_results:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/results/CatBoost_resampling_results.csv

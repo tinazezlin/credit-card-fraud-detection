@@ -1,0 +1,28 @@
+MODELI:
+- CatBoost
+- XGBoost
+- AdaBoost
+- LightGBM
+- LR
+- SVM
+- RF
+- ANN?
+
+RESAMPLING:
+- ROS
+- RUS
+- SMOTE
+- kakšne custome???
+
+METRIKE:
+- F1 score
+- Precision
+- Recall
+- AUC score (AUC ROC)
+- Average precision score (AP)
+- G-Mean
+(source: https://www.kaggle.com/code/marcinrutecki/best-techniques-and-metrics-for-imbalanced-dataset#2.-Metrics-for-imbalanced-data)
+
+Precision is more important than Recall when you would like to have less False Positives in trade off to have more False Negatives. Meaning, getting a False Positive is very costly, and a False Negative is not as much.
+
+Imagine a zombie apocalypse. You would try to accept as many healthy people as you can into your safe zone, but you really dont want to mistakenly pass a zombie. The true positive is this case is a healthy person and false positive a zombie. It is more important to avoid zombies than accepting more healthy people. So you create a method that causes some of the healthy people mistakenly not to get into the safe zone, but this is the cost of not letting a zombie in.
