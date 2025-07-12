@@ -42,9 +42,23 @@ filtered_data:
   save_args:
     index: False
 
+all_features_norm_data:
+  type: pandas.CSVDataset
+  filepath: data/04_feature/all_features_norm_data.csv
+  save_args:
+    index: False
+
+model_evaluation_results_across_features:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/model_evaluation_results_across_features.csv
+
 baseline_model_scores:
   type: pandas.CSVDataset
   filepath: data/08_reporting/baseline_model_scores.csv
+
+baseline_model_scores_norm_features:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/baseline_model_scores_norm_features.csv
 
 model_resampling_results:
   type: pandas.CSVDataset
