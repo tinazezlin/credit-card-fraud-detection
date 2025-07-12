@@ -1,12 +1,27 @@
 from kedro.pipeline import Pipeline, node, pipeline
-from .nodes import evaluate_baseline_models, evaluate_models_with_resampling
+from .nodes import evaluate_baseline_models, evaluate_models_with_resampling, evaluate_baseline_models_across_feature_sets
 
 def create_pipeline(**kwargs) -> Pipeline:
+    
+    evaluate_models_across_features_node = node(
+        func=evaluate_baseline_models_across_feature_sets,
+        inputs=["preprocessed_data", "selected_feature_vectors"],
+        outputs="model_evaluation_results_across_features",
+        name="evaluate_models_across_features_node"
+    )
+        
     baseline_models =  node(
             func=evaluate_baseline_models,
-            inputs="filtered_data",
+            inputs=["filtered_data","params:time_log_path_filtered_features"],
             outputs="baseline_model_scores",
             name="evaluate_baseline_models_node"
+        )
+    
+    baseline_models_norm_features =  node(
+            func=evaluate_baseline_models,
+            inputs=["all_features_norm_data","params:time_log_path_all_features"],
+            outputs="baseline_model_scores_norm_features",
+            name="evaluate_baseline_models_norm_features_node"
         )
     
    # top_models = node(
@@ -54,7 +69,9 @@ def create_pipeline(**kwargs) -> Pipeline:
 
 
     return Pipeline([
+        evaluate_models_across_features_node,
         baseline_models,
+        baseline_models_norm_features,
         #top_models
         rf_model,
         knn_model,
