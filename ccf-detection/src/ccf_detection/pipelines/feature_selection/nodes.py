@@ -168,3 +168,16 @@ def filter_selected_features(data: pd.DataFrame, feature_vectors) -> pd.DataFram
     data_filtered = data[selected_features + ['Class']]
     
     return data_filtered
+
+def all_features(data: pd.DataFrame,) -> pd.DataFrame:
+    """
+    Filter the DataFrame to keep all features, excluding not normalized Amunt and Time.
+
+    Args:
+        data: The preprocessed DataFrame with all features and 'Class'.
+    Returns:
+        DataFrame containing all normalized features + 'Class'.
+    """
+    data_filtered = data.drop(columns=['Amount', 'Time'])
+    
+    return data_filtered
