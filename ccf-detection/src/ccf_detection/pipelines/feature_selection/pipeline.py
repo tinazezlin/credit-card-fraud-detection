@@ -1,5 +1,5 @@
 from kedro.pipeline import Pipeline, node, pipeline
-from .nodes import remove_highly_correlated_features, compute_feature_target_correlation, compute_information_gain, compute_extra_trees_importance, compute_lightgbm_feature_importance, generate_feature_vectors, filter_selected_features
+from .nodes import remove_highly_correlated_features, compute_feature_target_correlation, compute_information_gain, compute_extra_trees_importance, compute_lightgbm_feature_importance, generate_feature_vectors, filter_selected_features, all_features
 
 def create_pipeline(**kwargs) -> Pipeline:
     preprocess_data = node(
@@ -57,6 +57,13 @@ def create_pipeline(**kwargs) -> Pipeline:
             outputs="filtered_data",
             name="filter_selected_features_node"
         )
+    
+    all_features_node = node(
+            func=all_features,
+            inputs=["preprocessed_data"],
+            outputs="all_features_norm_data",
+            name="all_features_node"
+        )
 
 
     return Pipeline([
@@ -66,5 +73,6 @@ def create_pipeline(**kwargs) -> Pipeline:
         extra_trees_importance,
         lightgbm_feature_importance,
         generate_features,
-        filter_selected_features_node        
+        filter_selected_features_node,
+        all_features_node        
     ])
