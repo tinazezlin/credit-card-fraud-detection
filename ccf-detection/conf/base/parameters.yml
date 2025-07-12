@@ -1,3 +1,7 @@
+time_log_path_all_features: "data/08_reporting/time_log_all_features.log"
+time_log_path_filtered_features: "data/08_reporting/time_log_filtered_features.log"
+
+
 
 RF: "RandomForest"
 KNN: "KNN"
