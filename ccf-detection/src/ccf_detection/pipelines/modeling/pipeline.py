@@ -1,5 +1,5 @@
 from kedro.pipeline import Pipeline, node, pipeline
-from .nodes import evaluate_baseline_models, evaluate_models_with_resampling, evaluate_baseline_models_across_feature_sets
+from .nodes import evaluate_baseline_models, evaluate_models_with_resampling, evaluate_baseline_models_across_feature_sets, evaluate_models_with_resampling_svm, evaluate_models_with_custom_easy_ensemble, evaluate_models_with_resampling_all_features, evaluate_models_with_custom_easy_ensemble_all_features
 
 def create_pipeline(**kwargs) -> Pipeline:
     
@@ -24,58 +24,50 @@ def create_pipeline(**kwargs) -> Pipeline:
             name="evaluate_baseline_models_norm_features_node"
         )
     
-   # top_models = node(
-   #         func=evaluate_models_with_resampling,
-   #         inputs="filtered_data",  # from your feature selection
-   #         outputs="model_resampling_results",
-   #         name="evaluate_models_with_resampling_node"
-   #     )
-    
-    # TOP 5 MODELS AND RESAMPLING
-    rf_model = node(
+    top_models = node(
             func=evaluate_models_with_resampling,
-            inputs=["filtered_data", "params:RF"],  # from your feature selection
-            outputs="rf_resampling_results",
-            name="evaluate_rf_with_resampling_node"
+            inputs=["preprocessed_data", "selected_feature_vectors"],  # from your feature selection
+            outputs="model_resampling_results",
+            name="evaluate_models_with_resampling_node"
         )
     
-    knn_model = node(
-            func=evaluate_models_with_resampling,
-            inputs=["filtered_data", "params:KNN"],  # from your feature selection
-            outputs="knn_resampling_results",
-            name="evaluate_knn_with_resampling_node"
+    top_models_svm = node(
+            func=evaluate_models_with_resampling_svm,
+            inputs=["preprocessed_data", "selected_feature_vectors"],  # from your feature selection
+            outputs="model_resampling_results_svm",
+            name="evaluate_models_with_resampling_svm_node"
         )
     
-    svm_model = node(
-            func=evaluate_models_with_resampling,
-            inputs=["filtered_data", "params:SVM"],  # from your feature selection
-            outputs="svm_resampling_results",
-            name="evaluate_svm_with_resampling_node"
+    top_models_all_features = node(
+            func=evaluate_models_with_resampling_all_features,
+            inputs="all_features_norm_data",  
+            outputs="model_resampling_results_all_features",
+            name="evaluate_models_with_resampling_all_features_node"
         )
     
-    XGBoost_model = node(
-            func=evaluate_models_with_resampling,
-            inputs=["filtered_data", "params:XGBoost"],  # from your feature selection
-            outputs="XGBoost_resampling_results",
-            name="evaluate_XGBoost_with_resampling_node"
-        )
+    top_models_custom_easy_ensamble = node(
+        func=evaluate_models_with_custom_easy_ensemble,
+        inputs=["preprocessed_data", "selected_feature_vectors"],  # from your feature selection
+        outputs="model_custom_easy_ensamble_results",
+        name="evaluate_models_with_custom_easy_esamble_node"
+    )
     
-    CatBoost_model = node(
-            func=evaluate_models_with_resampling,
-            inputs=["filtered_data", "params:CatBoost"],  # from your feature selection
-            outputs="CatBoost_resampling_results",
-            name="evaluate_CatBoost_with_resampling_node"
-        )
+    top_models_custom_easy_ensamble_all_features = node(
+        func=evaluate_models_with_custom_easy_ensemble_all_features,
+        inputs="all_features_norm_data",   
+        outputs="model_custom_easy_ensamble_results_all_features",
+        name="evaluate_models_with_custom_easy_esamble_all_features_node"
+    )
+
 
 
     return Pipeline([
         evaluate_models_across_features_node,
         baseline_models,
         baseline_models_norm_features,
-        #top_models
-        rf_model,
-        knn_model,
-        svm_model,
-        XGBoost_model,
-        CatBoost_model
+        top_models,
+        top_models_svm,
+        top_models_all_features,
+        top_models_custom_easy_ensamble,
+        top_models_custom_easy_ensamble_all_features
     ])
