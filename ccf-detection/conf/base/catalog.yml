@@ -60,10 +60,26 @@ baseline_model_scores_norm_features:
   type: pandas.CSVDataset
   filepath: data/08_reporting/baseline_model_scores_norm_features.csv
 
+# Results for top 5 models with RUS, ROS and SMOTE
 model_resampling_results:
   type: pandas.CSVDataset
   filepath: data/08_reporting/model_resampling_results.csv
 
+model_resampling_results_svm:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/model_resampling_results_svm.csv
+
+model_resampling_results_all_features:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/model_resampling_results_all_features.csv
+
+model_custom_easy_ensamble_results:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/model_custom_easy_ensamble_results.csv
+
+model_custom_easy_ensamble_results_all_features:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/model_custom_easy_ensamble_results_all_features.csv
 
 rf_resampling_results:
   type: pandas.CSVDataset
