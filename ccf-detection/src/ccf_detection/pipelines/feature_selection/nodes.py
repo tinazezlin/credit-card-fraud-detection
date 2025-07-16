@@ -118,7 +118,7 @@ def generate_feature_vectors(
     information_gain_scores: pd.DataFrame,
     extra_trees_importance: pd.DataFrame,
     lightgbm_feature_importance: pd.DataFrame,
-    lightgbm_feature_importanc_norm: pd.DataFrame
+    lightgbm_feature_importance_norm: pd.DataFrame
 ) -> dict:
     """
     Generate different feature sets based on the results of feature selection methods.
@@ -129,27 +129,29 @@ def generate_feature_vectors(
     feature_vectors = {}
 
     # Top-k features by each method (e.g., top 15)
-    k = 15
+    k_values = [10, 15, 20, 25]  # or any you want to explore
 
-    feature_vectors["corr_target_top"] = correlation_with_target.head(k)["feature"].tolist()
-    feature_vectors["info_gain_top"] = information_gain_scores.head(k)["feature"].tolist()
-    feature_vectors["extra_trees_top"] = extra_trees_importance.head(k)["feature"].tolist()
-    feature_vectors["lgbm_top"] = lightgbm_feature_importance.head(k)["feature"].tolist()
-    feature_vectors["lgbm_top_norm"] = lightgbm_feature_importanc_norm.head(k)["feature"].tolist()
+    for k in k_values:
+        feature_vectors[f"info_gain_top_{k}"] = information_gain_scores.head(k)["feature"].tolist()
+        feature_vectors[f"corr_target_top_{k}"] = correlation_with_target.head(k)["feature"].tolist()
+        feature_vectors[f"extra_trees_top_{k}"] = extra_trees_importance.head(k)["feature"].tolist()
+        feature_vectors[f"lgbm_top_{k}"] = lightgbm_feature_importance.head(k)["feature"].tolist()
+        feature_vectors[f"lgbm_top_norm_{k}"] = lightgbm_feature_importance_norm.head(k)["feature"].tolist()
 
-    # Combine most common features across methods
-    from collections import Counter
-    combined = (
-        feature_vectors["corr_target_top"] +
-        feature_vectors["info_gain_top"] +
-        feature_vectors["extra_trees_top"] +
-        feature_vectors["lgbm_top"] +
-        feature_vectors["lgbm_top_norm"]
-    )
-    most_common = [
-        item for item, count in Counter(combined).items() if count >= 2
-    ]
-    feature_vectors["intersection_2plus"] = most_common
+
+        # Combine most common features across methods
+        from collections import Counter
+        combined = (
+            feature_vectors[f"corr_target_top_{k}"] +
+            feature_vectors[f"info_gain_top_{k}"] +
+            feature_vectors[f"extra_trees_top_{k}"] +
+            feature_vectors[f"lgbm_top_{k}"] +
+            feature_vectors[f"lgbm_top_norm_{k}"]
+        )
+        most_common = [
+            item for item, count in Counter(combined).items() if count >= 2
+        ]
+        feature_vectors[f"intersection_2plus_{k}"] = most_common
 
     return feature_vectors
 
