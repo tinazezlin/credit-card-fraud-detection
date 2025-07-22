@@ -20,14 +20,38 @@ def remove_highly_correlated_features(data: pd.DataFrame, threshold: float = 0.9
     return data.drop(columns=to_drop)
 
 
-def compute_feature_target_correlation(data: pd.DataFrame) -> pd.DataFrame:
-    correlations = data.corr()['Class'].drop('Class')
-    return (
-        correlations
-        .reindex(correlations.abs().sort_values(ascending=False).index)
+def compute_feature_target_correlation(data: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Compute Pearson correlation between each feature and the target 'Class',
+    once using the raw 'Time' and 'Amount', and once using 'normTime' and 'normAmount'.
+
+    Returns:
+        Tuple of two DataFrames:
+        - One with correlations using 'Time' and 'Amount'
+        - One with correlations using 'normTime' and 'normAmount'
+    """
+
+    # --- First version with 'Time' and 'Amount'
+    data_raw = data.drop(columns=["normTime", "normAmount"], errors="ignore")
+    correlations_raw = data_raw.corr()['Class'].drop('Class')
+    df_raw = (
+        correlations_raw
+        .reindex(correlations_raw.abs().sort_values(ascending=False).index)
         .reset_index()
         .rename(columns={'index': 'feature', 'Class': 'correlation_with_target'})
     )
+
+    # --- Second version with 'normTime' and 'normAmount'
+    data_norm = data.drop(columns=["Time", "Amount"], errors="ignore")
+    correlations_norm = data_norm.corr()['Class'].drop('Class')
+    df_norm = (
+        correlations_norm
+        .reindex(correlations_norm.abs().sort_values(ascending=False).index)
+        .reset_index()
+        .rename(columns={'index': 'feature', 'Class': 'correlation_with_target'})
+    )
+
+    return df_raw, df_norm
 
 
 
@@ -113,8 +137,8 @@ def compute_lightgbm_feature_importance(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def generate_feature_vectors(
-    cleaned_features_corr: pd.DataFrame,
     correlation_with_target: pd.DataFrame,
+    correlation_with_target_norm: pd.DataFrame,
     information_gain_scores: pd.DataFrame,
     extra_trees_importance: pd.DataFrame,
     lightgbm_feature_importance: pd.DataFrame,
@@ -134,6 +158,7 @@ def generate_feature_vectors(
     for k in k_values:
         feature_vectors[f"info_gain_top_{k}"] = information_gain_scores.head(k)["feature"].tolist()
         feature_vectors[f"corr_target_top_{k}"] = correlation_with_target.head(k)["feature"].tolist()
+        feature_vectors[f"corr_target_top_norm_{k}"] = correlation_with_target.head(k)["feature"].tolist()
         feature_vectors[f"extra_trees_top_{k}"] = extra_trees_importance.head(k)["feature"].tolist()
         feature_vectors[f"lgbm_top_{k}"] = lightgbm_feature_importance.head(k)["feature"].tolist()
         feature_vectors[f"lgbm_top_norm_{k}"] = lightgbm_feature_importance_norm.head(k)["feature"].tolist()
@@ -143,6 +168,7 @@ def generate_feature_vectors(
         from collections import Counter
         combined = (
             feature_vectors[f"corr_target_top_{k}"] +
+            feature_vectors[f"corr_target_top_norm_{k}"] +
             feature_vectors[f"info_gain_top_{k}"] +
             feature_vectors[f"extra_trees_top_{k}"] +
             feature_vectors[f"lgbm_top_{k}"] +
