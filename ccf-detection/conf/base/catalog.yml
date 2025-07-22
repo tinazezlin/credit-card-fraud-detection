@@ -11,6 +11,10 @@ correlation_with_target:
   type: pandas.CSVDataset
   filepath: data/08_reporting/feature_target_correlation.csv
 
+correlation_with_target_norm:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/feature_target_correlation_norm.csv
+
 cleaned_features_corr:
   type: pandas.CSVDataset
   filepath: data/05_model_input/cleaned_no_multicollinearity.csv
@@ -80,6 +84,10 @@ model_custom_easy_ensamble_results:
 model_custom_easy_ensamble_results_all_features:
   type: pandas.CSVDataset
   filepath: data/08_reporting/model_custom_easy_ensamble_results_all_features.csv
+
+final_model_evaluation_results:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/final_model_evaluation_results.csv
 
 rf_resampling_results:
   type: pandas.CSVDataset
