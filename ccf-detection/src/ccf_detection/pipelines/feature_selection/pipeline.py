@@ -9,12 +9,12 @@ def create_pipeline(**kwargs) -> Pipeline:
             name="remove_high_corr_features_node"
         )
     
-    feaure_target_correlation = node(
-            func=compute_feature_target_correlation,
-            inputs="preprocessed_data",
-            outputs="correlation_with_target",
-            name="feature_target_correlation_node"
-        )
+    feature_target_correlation = node(
+        func=compute_feature_target_correlation,
+        inputs="preprocessed_data",
+        outputs=["correlation_with_target", "correlation_with_target_norm"],
+        name="feature_target_correlation_node"
+    )
     
     information_gain = node(
             func=compute_information_gain,
@@ -40,8 +40,8 @@ def create_pipeline(**kwargs) -> Pipeline:
     generate_features = node(
             func=generate_feature_vectors,
             inputs=[
-                "cleaned_features_corr",
                 "correlation_with_target",
+                "correlation_with_target_norm",
                 "information_gain_scores",
                 "extra_trees_importance",
                 "lightgbm_feature_importance",
@@ -68,7 +68,7 @@ def create_pipeline(**kwargs) -> Pipeline:
 
     return Pipeline([
         preprocess_data,
-        feaure_target_correlation,
+        feature_target_correlation,
         information_gain,
         extra_trees_importance,
         lightgbm_feature_importance,
