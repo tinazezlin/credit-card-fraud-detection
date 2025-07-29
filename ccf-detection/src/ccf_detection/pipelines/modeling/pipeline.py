@@ -1,5 +1,5 @@
 from kedro.pipeline import Pipeline, node, pipeline
-from .nodes import evaluate_baseline_models, evaluate_models_with_resampling, evaluate_baseline_models_across_feature_sets, evaluate_models_with_resampling_svm, evaluate_models_with_custom_easy_ensemble, evaluate_models_with_resampling_all_features, evaluate_models_with_custom_easy_ensemble_all_features
+from .nodes import evaluate_baseline_models, evaluate_models_with_resampling, evaluate_baseline_models_across_feature_sets, evaluate_models_with_resampling_svm, evaluate_models_with_custom_easy_ensemble, evaluate_models_with_resampling_all_features, evaluate_models_with_custom_easy_ensemble_all_features, final_model_evaluation, final_model_evaluation_easy_ensemble
 
 def create_pipeline(**kwargs) -> Pipeline:
     
@@ -58,6 +58,20 @@ def create_pipeline(**kwargs) -> Pipeline:
         outputs="model_custom_easy_ensamble_results_all_features",
         name="evaluate_models_with_custom_easy_esamble_all_features_node"
     )
+    
+    final_model_eval_node = node(
+        func=final_model_evaluation,
+        inputs=["preprocessed_data", "selected_feature_vectors"],
+        outputs="final_model_evaluation_results",
+        name="final_model_evaluation_node"
+    )
+    
+    final_model_eval_custom_ee_node = node(
+        func=final_model_evaluation_easy_ensemble,
+        inputs=["preprocessed_data", "selected_feature_vectors"],
+        outputs="final_model_evaluation_custom_ee_results",
+        name="final_model_evaluation_custom_ee_node"
+    )
 
 
 
@@ -69,5 +83,7 @@ def create_pipeline(**kwargs) -> Pipeline:
         top_models_svm,
         top_models_all_features,
         top_models_custom_easy_ensamble,
-        top_models_custom_easy_ensamble_all_features
+        top_models_custom_easy_ensamble_all_features,
+        final_model_eval_node,
+        final_model_eval_custom_ee_node
     ])
